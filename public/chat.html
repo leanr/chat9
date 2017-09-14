@@ -1,0 +1,69 @@
+
+  <div class="container clearfix">
+    <div class="people-list" id="people-list">
+      <div class="search">
+        <input type="text" placeholder="search" ng-model="searchUsers" />
+        <i class="fa fa-search"></i>
+      </div>
+      <ul class="list">
+        <li class="user" ng-class="{selected : selectedUser === user.nickname}" ng-click="loadChat($event)" emailhash="{{user.emailhash}}" nickname="{{user.nickname}}" socketid="{{user.socketid}}" ng-repeat="user in users | filter: searchUsers" ng-if="user.socketid != mysocketid">
+          <img class="profilepicture" src="http://www.gravatar.com/avatar/{{user.emailhash}}" alt="{{user.nickname}}" />
+          <div class="about">
+            <div class="name">{{user.nickname}}</div>
+            <div class="status">
+              <i class="fa fa-circle online"></i> online
+            </div>
+          </div>
+        </li>
+        <li class="clearfix" ng-hide="users.length">No users online!</li>
+      </ul>
+    </div>
+    
+    <div class="chat">
+      <div id="chat-holder" ng-show="activeChat">
+        <div class="chat-header clearfix">
+          <img class="chosenuseravatar" src="http://www.gravatar.com/avatar/{{selectedUserHash}}" alt="avatar" />
+          
+          <div class="chat-about">
+            <div class="chat-with">Chat with {{selectedUser}}</div>
+            <div class="chat-num-messages">{{msgcount}} messages conveyed</div>
+          </div>
+          <i class="fa fa-star"></i>
+        </div> <!-- end chat-header -->
+        
+        <div class="chat-history" id="chat-data">
+          <ul>
+            <li class="clearfix" ng-repeat="msg in conversation">
+              <div ng-class="{'message-data': true, 'align-right' : msg.from === mynickname}">
+
+              <div ng-if="msg.from == mynickname">
+                <span class="message-data-time">{{msg.time * 1000 | date: 'h:mm a' }}</span> &nbsp; &nbsp;
+                <span class="message-data-name">{{msg.from}}</span> <i class="fa fa-circle me"></i>
+              </div>
+
+              <div ng-if="msg.from != mynickname">
+                <span class="message-data-name">{{msg.from}}</span> <i class="fa fa-circle online"></i>
+                <span class="message-data-time">{{msg.time * 1000 | date: 'h:mm a' }}</span> &nbsp; &nbsp;
+              </div>
+
+              </div>
+              <div ng-class="{'message':true, 'other-message float-right':msg.from === mynickname, 'my-message':msg.from !== mynickname}">
+                {{msg.message}}
+              </div>
+            </li>
+          </ul>
+          
+        </div> <!-- end chat-history -->
+        
+        <div class="chat-message clearfix">
+          <textarea ng-model="message" ng-keyup="(!$event.shiftKey && ($event.keyCode == 13)) ? sendMessage() : ''" placeholder ="your message ..." rows="3"></textarea>
+        </div> <!-- end chat-message -->
+      </div> <!-- end chat-holder -->
+
+      <div id="empty-chat" ng-show="emptyChat">
+        <i class="fa fa-comment lg"></i>
+      </div>
+      
+    </div> <!-- end chat -->
+    
+  </div> <!-- end container -->
